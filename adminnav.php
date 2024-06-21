@@ -126,7 +126,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 </div>
 
 <div class="topnav">
-<a href="adminnav.php"><img src="home-icon.png" id="home-icon" alt="Home Icon"></a>
+<a href="adminnavbar.php"><img src="home-icon.png" id="home-icon" alt="Home Icon"></a>
 <a href="Room_list.php">ROOM DETAILS</a>
     <a href="Admin_list.php">ADMIN DETAILS</a>
     <a href="Booking_list.php">BOOKING DETAILS</a>

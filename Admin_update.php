@@ -1,3 +1,39 @@
+<?php
+session_start();
+include "Database_connection.php";
+
+if (isset($_POST['submit'])) {
+    $ID = $_POST['owner_id'];
+    $NAME = $_POST['owner_name'];
+    $PASSWORD = $_POST['owner_password'];
+
+    // Hash the password
+    $hashed_password = password_hash($PASSWORD, PASSWORD_DEFAULT);
+
+    // Check the hashed password
+    echo "Hashed Password: " . $hashed_password . "<br>";
+
+    $sql = "INSERT INTO owner (owner_id, owner_name, owner_password) VALUES (?, ?, ?)";
+
+    // Using prepared statement to prevent SQL injection
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sss", $ID, $NAME, $hashed_password);
+
+    if ($stmt->execute()) {
+        $last_id = $stmt->insert_id; // Retrieve the auto-generated ID
+        echo '<script>alert("Registration is Successful. Your Admin ID is: ' . $last_id . '")</script>';
+        header("Location: http://localhost/hotel/owner_login.php");
+        exit();
+    } else {
+        echo '<script>alert("SORRY, Try Again")</script>';
+        echo '<script>window.location="http://localhost/hotel/admin_registration.php"</script>';
+    }
+
+    $stmt->close();
+    $conn->close();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +42,8 @@
     <title>Ashton Hotel - Admin Registration</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <style>
-        body {
+
+body {
             margin: 0;
             font-family: 'Montserrat', sans-serif;
             background: radial-gradient(circle, rgba(60,51,94,1) 30%, rgba(134,87,79,1) 100%);
@@ -33,7 +70,8 @@
             font-family: 'Montserrat', sans-serif;
         }
         .topnav a {
-            display: inline-block; /* Changed from float: left; */
+            float: left;
+            display: block;
             color: white;
             text-align: center;
             padding: 20px 30px;
@@ -47,113 +85,125 @@
             vertical-align: middle;
         }
 
-        /* Content Container */
+        .audio-icon {
+            float: right;
+            margin: 12px;
+            cursor: pointer;
+            vertical-align: middle;
+        }
+
+
+
+        /* Main content container */
         .container {
-            max-width: 600px; /* Reduced maximum width for smaller form */
+            max-width: 500px;
             margin: 20px auto;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.7);
+            background-color: rgba(255, 255, 255, 0.8); /* Translucent white background */
             border-radius: 10px;
-        }
-
-        .form-group {
-            margin-bottom: 15px; /* Reduced margin bottom for form groups */
-            overflow: hidden;
-        }
-
-        .form-group label {
-            display: inline-block;
-            width: 100px; /* Fixed width for labels */
-            font-weight: bold;
-            margin-bottom: 5px; /* Reduced margin bottom for labels */
-        }
-
-        .form-group input[type=text],
-        .form-group input[type=password],
-        .form-group input[type=submit],
-        .form-group input[type=reset] {
-            width: calc(100% - 110px); /* Adjusted width for form inputs */
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        .form-group input[type=submit],
-        .form-group input[type=reset] {
-            width: auto; /* Allow buttons to size based on content */
-            padding: 10px 20px;
-            margin-right: 10px;
-        }
-
-        .form-group input[type=submit]:hover,
-        .form-group input[type=reset]:hover {
-            background-color: #0056b3;
-        }
-
-        /* Center align content */
-        .center {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .topnav a {
-                padding: 15px 10px;
-            }
-
-            .form-group label {
-                width: auto; /* Adjust label width for smaller screens */
-                display: block;
-                margin-bottom: 5px;
-            }
-
-            .form-group input[type=text],
-            .form-group input[type=password] {
-                width: 100%; /* Full width inputs on smaller screens */
-            }
+        .container h2 {
+            font-size: 2.5em;
+            border-bottom: 4px solid #9f6060; /* Change to desired color */
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+        .container form {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .container .form-group {
+            margin-bottom: 20px;
+        }
+        .container label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333; /* Label text color */
+        }
+        .container input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+        }
+        .container input:focus {
+            outline: none;
+            border-color: #4CAF50; /* Green border color on focus */
+        }
+        .container .submit-btn {
+            width: 100%;
+            background-color: #4CAF50; /* Green background color */
+            color: white; /* Text color */
+            border: none;
+            padding: 12px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease; /* Smooth transition on hover */
+        }
+        .container .submit-btn:hover {
+            background-color: #45A049; /* Darker green on hover */
+        }
+        .container .psw {
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+        .container .psw a {
+            color: #4CAF50; /* Link color */
+        }
+        .container .psw a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
-<body class="body_bg">
+<body>
+    
+    <!-- Header -->
+    <div class="header">
+        <img src="header.jpg" alt="Ashton Hotel Logo">
+    </div>
 
-<!-- Header Section -->
-<div class="header" style="opacity: 0.7;">
-    <img src="header.jpg" width="100%" alt="Ashton Logo">
-</div>
-
-<!-- Navigation Bar -->
-<div class="topnav">
-<a href="adminnav.php"><img src="home-icon.png" id="home-icon" alt="Home Icon"></a>
+    <div class="topnav">
+<a href="adminnavbar.php"><img src="home-icon.png" id="home-icon" alt="Home Icon"></a>
 <a href="Room_list.php">ROOM DETAILS</a>
     <a href="Admin_list.php">ADMIN DETAILS</a>
     <a href="Booking_list.php">BOOKING DETAILS</a>
     <a href="sales_report.php">REPORT</a>
+    <audio id="background-audio" src="song.mp3"></audio>
+    <img src="audio-icon.png" style="float: right; margin: 10px; cursor: pointer;" class="audio-icon" id="audio-icon" alt="Audio Icon" width="32" height="32">
     <a style="float:right" href="logout.php">LOGOUT</a>
-    <a style="float:right" href="http://localhost/hotel/Admin_list.php" class="previous">&laquo; Previous</a>
-    <a style="float:right" href="http://localhost/hotel/Admin_update.php" class="next">Next &raquo;</a>
+    <a style="float:right" href="http://localhost/hotel/adminnav.php" class="previous">&laquo; Previous</a>
+    <a style="float:right" href="http://localhost/hotel/Room_list.php" class="next">Next &raquo;</a>
 </div>
 
-<!-- Main Content -->
-<div class="container center">
-    <h1>ADMIN REGISTRATION FORM</h1>
+    <!-- Main content -->
+    <div class="container">
+        <h2>ADMIN ADD FORM</h2>
 
-    <form method="post" action="http://localhost/hotel/Admin_registration.php">
-        <div class="form-group">
-            <label for="owner_name">Name:</label>
-            <input type="text" id="owner_name" name="owner_name" required>
-        </div>
-        <div class="form-group">
-            <label for="owner_password">Password:</label>
-            <input type="password" id="owner_password" name="owner_password" required>
-        </div>
-        <div class="form-group" style="text-align:right">
-            <input type="submit" name="submit" value="Submit" class="submit">
-            <input type="reset" value="Reset" class="submit">
-        </div>
-    </form>
-</div>
+        <form method="post" action="admin_registration.php">
+            <div class="form-group">
+                <label for="owner_id">Admin ID:</label>
+                <input type="text" class="form-control" id="owner_id" name="owner_id" required>
+            </div>
+            <div class="form-group">
+                <label for="owner_name">Admin Name:</label>
+                <input type="text" class="form-control" id="owner_name" name="owner_name" required>
+            </div>
+            <div class="form-group">
+                <label for="owner_password">Password:</label>
+                <input type="password" class="form-control" id="owner_password" name="owner_password" required>
+            </div>
+            <button type="submit" name="submit" class="submit-btn">Register</button>
+        </form>
+    </div>
 
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </body>
 </html>
