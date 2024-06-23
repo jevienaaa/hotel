@@ -141,7 +141,7 @@ header("Expires: 0");
 
 <div class="topnav" style="font-weight: normal">
 ">
-    <a href="geustnav.php"><img src="home-icon.png" id="home-icon" alt="Home Icon"></a>
+    <a href="guestnav.php"><img src="home-icon.png" id="home-icon" alt="Home Icon"></a>
     <a href="Room_list_2.php" >ROOM DETAILS</a>
     <a href="Room_search.php">ROOM SEARCH</a>
     <audio id="background-audio" src="song.mp3"></audio>

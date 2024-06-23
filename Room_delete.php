@@ -13,6 +13,6 @@ echo 'Try Again';
 }
 else
 echo 'Delete Successful';
-header("location: http://localhost/Project/hotel/Room_list.php");
+header("location: http://localhost/hotel/Room_list.php");
 }
 ?>

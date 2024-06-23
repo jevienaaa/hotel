@@ -2,25 +2,25 @@
 session_start();
 include "Database_connection.php";
 
-if(isset($_POST['submit'])) {
-    $NAME = $_POST['room_name'];
-    $AVAILABILITY = $_POST['room_availability'];
-    $PRICE = $_POST['room_price'];
-    $RATE = $_POST['room_rating'];
-    $DESC = $_POST['room_description'];
-    $LOCATION = $_POST['room_location'];
-    // $IMAGE = $_POST['room_image']; // Assuming you handle file uploads separately
-    $sql = "INSERT INTO room (room_id, room_name, room_availability, room_price, room_rating, room_description, room_location) 
-            VALUES (NULL, '$NAME', '$AVAILABILITY', '$PRICE', '$RATE', '$DESC', '$LOCATION')";
+    if(isset($_POST['submit']))
+    {
+    $NAME=$_POST['room_name'];
+    $AVAILABILITY=$_POST['room_availability'];
+    $PRICE=$_POST['room_price'];
+    $RATE=$_POST['room_rating'];
+    $DESC=$_POST['room_description'];
+    $LOCATION=$_POST['room_location'];
+    $IMAGE=$_POST['room_image'];
+    $sql="INSERT INTO room (room_id,room_name,room_availability,room_price,room_rating,room_description,room_location,room_image) values (NULL,'$NAME','$AVAILABILITY','$PRICE','$RATE','$DESC','$LOCATION','$IMAGE');";
     
-    if(!mysqli_query($conn, $sql)) {
-        echo '<script>alert("SORRY, Try Again")</script>';
-        echo '<script>window.location="http://localhost/hotel/Room_update_form.php"</script>';
-    } else {
-        header("location: http://localhost/hotel/Room_list.php");
-        exit();
+    if(!mysqli_query($conn,$sql))
+    {
+        echo'<script>alert("SORRY, Try Again")</script>';
+        echo'<script>window.location="http://localhost/hotel/Room_update_form.php"</script>';
     }
-}
+    else
+        header("location: http://localhost/hotel/Room_list.php");
+    }
 ?>
 
 <!DOCTYPE html>

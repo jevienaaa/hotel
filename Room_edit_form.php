@@ -16,9 +16,9 @@ if(isset($_POST['submit']))
     
     if(!mysqli_query($conn, $sql)) {
         echo '<script>alert("Not Inserted")</script>';
-        echo '<script>window.location="http://localhost/Project/Hotel/Room_edit_form.php"</script>';
+        echo '<script>window.location="http://localhost/hotel/Room_edit_form.php"</script>';
     } else {
-        header("location: http://localhost/Project/Hotel/Room_list.php");
+        header("location: http://localhost/hotel/Room_list.php");
         exit();
     }
 }
@@ -190,7 +190,7 @@ elseif(isset($_GET['id'])) {
 
         <div align="center">
 
-            <form name="Room_edit_form" method="post" action="http://localhost/Project/hotel/Room_edit_form.php">
+            <form name="Room_edit_form" method="post" action="http://localhost//hotel/Room_edit_form.php">
 
                 <div class="center">
                     <input type="hidden" name="room_id" value="<?php echo $ID ?>" />
